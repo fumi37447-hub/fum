@@ -1,806 +1,1072 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>テキスト日程調整アシスタント ─ にこったまさん向けご説明</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>日程調整の下準備をAIが支えるご提案</title>
   <style>
     :root {
-      --bg: #f8f9fb;
-      --surface: #ffffff;
-      --text: #1a1d26;
-      --muted: #5c6370;
-      --accent: #2563eb;
-      --accent-light: #eff6ff;
-      --border: #e2e8f0;
-      --success: #059669;
-      --success-bg: #ecfdf5;
-      --warn: #d97706;
-      --warn-bg: #fffbeb;
-      --warm: #7c3aed;
-      --warm-light: #f5f3ff;
-      --radius: 12px;
-      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #d7dee8;
+      --paper: #ffffff;
+      --bg: #f6f8fb;
+      --navy: #18324a;
+      --blue: #2f6fa6;
+      --blue-soft: #e8f1f8;
+      --green: #16745a;
+      --green-soft: #eaf7f1;
+      --amber: #9a6a13;
+      --amber-soft: #fff6df;
+      --rose: #a33a3a;
+      --rose-soft: #fff0f0;
+      --shadow: 0 16px 44px rgba(24, 50, 74, 0.08);
+      --radius: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.75;
-      font-size: 15px;
-    }
-
-    .wrap {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    header {
-      background: linear-gradient(135deg, #5b21b6 0%, #2563eb 55%, #3b82f6 100%);
-      color: #fff;
-      border-radius: var(--radius);
-      padding: 40px 36px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    header h1 {
-      font-size: 1.65rem;
-      font-weight: 700;
-      letter-spacing: .02em;
-      margin-bottom: 16px;
-    }
-
-    header .lead {
-      font-size: 1rem;
-      opacity: .95;
-      max-width: 720px;
-      line-height: 1.85;
-    }
-
-    header .sub {
-      font-size: .9rem;
-      opacity: .85;
-      margin-top: 12px;
-      max-width: 720px;
-    }
-
-    .badge {
-      display: inline-block;
-      background: rgba(255,255,255,.2);
-      border: 1px solid rgba(255,255,255,.35);
-      border-radius: 999px;
-      padding: 4px 14px;
-      font-size: .78rem;
-      margin-bottom: 16px;
-    }
-
-    nav {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    nav strong {
-      display: block;
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    nav ol {
       margin: 0;
-      padding-left: 1.2rem;
-      font-size: .88rem;
-      color: var(--accent);
+      color: var(--ink);
+      background: var(--bg);
+      font-family: Arial, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+      line-height: 1.7;
     }
 
-    nav li { margin: 4px 0; }
-    nav a { color: var(--accent); text-decoration: none; }
-    nav a:hover { text-decoration: underline; }
+    a { color: inherit; }
+
+    .hero {
+      color: #ffffff;
+      background:
+        linear-gradient(rgba(16, 39, 61, 0.78), rgba(16, 39, 61, 0.76)),
+        url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1800&q=80") center / cover;
+      min-height: 520px;
+      display: flex;
+      align-items: center;
+      padding: 56px 24px 72px;
+    }
+
+    .container {
+      width: min(1080px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .hero-inner { max-width: 820px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 3px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 1.18;
+      letter-spacing: 0;
+      max-width: 900px;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(1rem, 2vw, 1.22rem);
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .hero-note {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+      max-width: 780px;
+    }
+
+    .hero-note div {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.13);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      min-height: 86px;
+    }
+
+    .hero-note strong {
+      display: block;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+    }
+
+    .hero-note span {
+      display: block;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .toc .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 12px 20px;
+    }
+
+    .toc a {
+      text-decoration: none;
+      color: var(--navy);
+      font-size: 0.84rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 999px;
+    }
+
+    .toc a:hover { background: var(--blue-soft); }
 
     section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px 32px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow);
+      padding: 64px 0;
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    section:nth-of-type(even) { background: var(--bg); }
+
+    .section-head {
+      margin-bottom: 28px;
+      max-width: 780px;
+    }
+
+    .section-kicker {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 0.84rem;
+      letter-spacing: 0;
+      margin-bottom: 8px;
     }
 
     h2 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--accent-light);
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: clamp(1.45rem, 3vw, 2.15rem);
+      line-height: 1.32;
+      letter-spacing: 0;
     }
 
     h3 {
-      font-size: .95rem;
-      font-weight: 700;
-      margin: 20px 0 10px;
-      color: var(--text);
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 1.06rem;
+      line-height: 1.42;
     }
 
-    p { margin-bottom: 12px; }
-    p:last-child { margin-bottom: 0; }
+    p { margin: 0 0 12px; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .9rem;
-      margin: 16px 0;
+    ul {
+      margin: 0;
+      padding-left: 1.25em;
     }
 
-    th, td {
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      text-align: left;
-      vertical-align: top;
-    }
+    li { margin: 5px 0; }
 
-    th {
-      background: #f1f5f9;
-      font-weight: 600;
-    }
+    .muted { color: var(--muted); }
 
-    tr:nth-child(even) td { background: #fafbfc; }
-
-    .timeline {
-      list-style: none;
-      margin: 20px 0;
-    }
-
-    .timeline li {
+    .grid-2 {
       display: grid;
-      grid-template-columns: 72px 1fr;
-      gap: 16px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
     }
 
-    .timeline li:last-child { border-bottom: none; }
-
-    .timeline .who {
-      font-size: .78rem;
-      font-weight: 700;
-      text-align: center;
-      padding: 6px 4px;
-      border-radius: 8px;
-      align-self: start;
-    }
-
-    .timeline .who.ai {
-      background: var(--success-bg);
-      color: var(--success);
-    }
-
-    .timeline .who.you {
-      background: var(--warm-light);
-      color: var(--warm);
-    }
-
-    .timeline strong { display: block; margin-bottom: 4px; }
-
-    .compare {
+    .grid-3 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 16px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
     }
 
-    @media (max-width: 600px) {
-      .compare { grid-template-columns: 1fr; }
-      .timeline li { grid-template-columns: 1fr; }
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 8px 26px rgba(24, 50, 74, 0.05);
     }
 
-    .compare-box {
-      border-radius: 10px;
-      padding: 18px;
-      font-size: .88rem;
+    .panel.soft { box-shadow: none; }
+
+    .statement {
+      color: var(--navy);
+      background: var(--blue-soft);
+      border-left: 5px solid var(--blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 18px 20px;
+      font-weight: 700;
+      font-size: 1.08rem;
     }
 
-    .compare-box.before {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
+    .issue-map {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 26px;
     }
 
-    .compare-box.after {
-      background: var(--success-bg);
-      border: 1px solid #a7f3d0;
-    }
-
-    .compare-box strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: .82rem;
-    }
-
-    .compare-box.before strong { color: #b91c1c; }
-    .compare-box.after strong { color: var(--success); }
-
-    .tag {
-      display: inline-block;
-      background: var(--accent-light);
-      color: var(--accent);
-      font-size: .75rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
-    }
-
-    .tag.ai {
-      background: var(--success-bg);
-      color: var(--success);
-    }
-
-    .tag.you {
-      background: var(--warm-light);
-      color: var(--warm);
-    }
-
-    .rules {
-      list-style: none;
+    .issue-column {
       display: grid;
       gap: 10px;
     }
 
-    .rules li {
-      padding: 12px 16px 12px 40px;
-      background: #f8fafc;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      position: relative;
-      font-size: .9rem;
+    .issue-item {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px 15px;
+      min-height: 62px;
     }
 
-    .rules li::before {
-      content: "✓";
-      position: absolute;
-      left: 14px;
-      top: 12px;
-      color: var(--success);
-      font-weight: 700;
+    .issue-item strong {
+      display: block;
+      color: var(--navy);
+      font-size: 0.94rem;
+      margin-bottom: 2px;
     }
 
-    .rules li.important {
-      background: var(--warn-bg);
-      border-color: #fde68a;
-    }
-
-    .rules li.important::before { color: var(--warn); content: "!"; }
-
-    .sample {
-      background: #1e293b;
-      color: #e2e8f0;
-      border-radius: 10px;
-      padding: 20px 22px;
-      font-size: .85rem;
-      line-height: 1.8;
-      white-space: pre-wrap;
-      margin: 12px 0;
-    }
-
-    .sample-label {
-      font-size: .78rem;
-      font-weight: 600;
+    .issue-item span {
+      display: block;
       color: var(--muted);
-      margin-bottom: 6px;
+      font-size: 0.88rem;
+      line-height: 1.45;
     }
 
-    .note {
-      background: var(--accent-light);
-      border-left: 4px solid var(--accent);
-      padding: 12px 16px;
-      border-radius: 0 8px 8px 0;
-      font-size: .88rem;
-      margin: 16px 0;
+    .arrow-label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 64px;
+      color: var(--blue);
+      font-weight: 800;
+      text-align: center;
     }
 
-    .note.warm {
-      background: var(--warm-light);
-      border-left-color: var(--warm);
+    .arrow-label::after {
+      content: "";
+      display: block;
+      width: 58px;
+      height: 2px;
+      background: var(--blue);
+      margin-left: 8px;
+      box-shadow: 14px 0 0 -6px var(--blue);
     }
 
-    .prompt-grid {
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .plan {
+      position: relative;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      min-height: 410px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .plan.recommended {
+      border: 3px solid var(--green);
+      box-shadow: var(--shadow);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      min-height: 26px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .plan.recommended .plan-badge {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .plan.warning .plan-badge {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .plan-name {
+      color: var(--navy);
+      font-size: 1.24rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .plan-summary {
+      color: var(--muted);
+      font-size: 0.94rem;
+      min-height: 54px;
+    }
+
+    .plan dl {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      font-size: 0.91rem;
+    }
+
+    .plan dt {
+      color: var(--navy);
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .plan dd {
+      margin: -7px 0 0;
+      color: var(--muted);
+    }
+
+    .why-b {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .roles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .role {
+      border: 1px solid var(--line);
+      background: var(--paper);
+      border-radius: var(--radius);
+      padding: 22px;
+    }
+
+    .role.person { border-top: 5px solid var(--blue); }
+    .role.ai { border-top: 5px solid var(--green); }
+
+    .role-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-weight: 800;
+      background: var(--blue);
+    }
+
+    .role.ai .role-label { background: var(--green); }
+
+    .role-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .role-list div {
+      border: 1px solid var(--line);
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      min-height: 54px;
+      font-size: 0.95rem;
+    }
+
+    .center-message {
+      text-align: center;
+      color: var(--navy);
+      background: var(--amber-soft);
+      border: 1px solid #efd28d;
+      border-radius: var(--radius);
+      padding: 16px;
+      margin: 18px 0 0;
+      font-weight: 800;
+    }
+
+    .flow {
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .lane-grid {
+      min-width: 900px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .lane {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .lane h3 {
+      margin: 0;
+      padding: 12px 14px;
+      color: #ffffff;
+      background: var(--navy);
+      font-size: 0.98rem;
+    }
+
+    .lane:nth-child(2) h3 { background: var(--green); }
+    .lane:nth-child(3) h3 { background: var(--blue); }
+    .lane:nth-child(4) h3 { background: var(--amber); }
+
+    .lane-body {
       display: grid;
       gap: 12px;
-      margin-top: 12px;
+      padding: 14px;
     }
 
-    .prompt-card {
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      background: #fafbfc;
+    .flow-step {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg);
+      padding: 12px 13px;
+      min-height: 72px;
+      font-size: 0.9rem;
     }
 
-    .prompt-card strong {
+    .flow-step strong {
       display: block;
-      font-size: .82rem;
-      color: var(--muted);
-      margin-bottom: 6px;
+      color: var(--navy);
+      margin-bottom: 2px;
     }
 
-    .prompt-card code {
-      font-size: .9rem;
-      color: var(--text);
+    .flow-step.blank {
+      border-color: transparent;
+      background: transparent;
     }
 
-    .highlight-box {
-      background: var(--warm-light);
-      border: 1px solid #ddd6fe;
-      border-radius: 10px;
-      padding: 18px 20px;
-      margin: 16px 0;
-      font-size: .92rem;
+    .time-change {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 90px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .time-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      min-height: 230px;
+    }
+
+    .time-card.after {
+      border: 3px solid var(--green);
+      box-shadow: var(--shadow);
+    }
+
+    .time-number {
+      color: var(--navy);
+      font-size: clamp(2rem, 5vw, 3.35rem);
+      line-height: 1.1;
+      font-weight: 900;
+      margin: 8px 0 10px;
+    }
+
+    .time-card.after .time-number { color: var(--green); }
+
+    .time-arrow {
+      color: var(--blue);
+      text-align: center;
+      font-weight: 900;
+      font-size: 1.4rem;
+    }
+
+    .mind-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .mind {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      min-height: 150px;
+    }
+
+    .mind strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 5px;
+    }
+
+    .safe-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .safe-list div {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 15px 16px;
+    }
+
+    .safe-list strong {
+      display: block;
+      color: var(--green);
+      margin-bottom: 2px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .step {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      min-height: 180px;
+    }
+
+    .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 28px;
+      padding: 2px 10px;
+      color: #ffffff;
+      background: var(--navy);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .demo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 18px;
+      border-radius: var(--radius);
+      color: #ffffff;
+      background: var(--green);
+      text-decoration: none;
+      font-weight: 800;
+      margin-top: 8px;
     }
 
     footer {
+      color: #ffffff;
+      background: var(--navy);
+      padding: 32px 20px;
       text-align: center;
-      color: var(--muted);
-      font-size: .8rem;
-      margin-top: 32px;
+    }
+
+    footer p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 860px) {
+      .hero { min-height: 620px; }
+      .hero-note,
+      .grid-2,
+      .grid-3,
+      .plans,
+      .why-b,
+      .roles,
+      .mind-grid,
+      .safe-list,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .issue-map,
+      .time-change {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow-label,
+      .time-arrow {
+        min-height: auto;
+      }
+
+      .arrow-label::after { display: none; }
+    }
+
+    @media print {
+      .toc { position: static; }
+      .hero { min-height: auto; }
+      section { break-inside: avoid; }
+      body { background: #ffffff; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <header class="hero">
+    <div class="container hero-inner">
+      <div class="eyebrow">にこったまさん向けご提案資料</div>
+      <h1>大切なクライアント対応を残したまま、日程調整の負担を減らすご提案</h1>
+      <p class="lead">
+        送信前の最終確認はにこったまさんが行い、候補作成・文面作成・確定後の整理はAIが下準備します。
+        丁寧な対応は残しながら、日程調整に悩む時間を減らすためのプランです。
+      </p>
+      <div class="hero-note">
+        <div>
+          <strong>残すこと</strong>
+          <span>先方への最終確認と送信、必要な一言の調整</span>
+        </div>
+        <div>
+          <strong>AIが支えること</strong>
+          <span>複数人の空き照合、候補探し、返信整理、文面作成の下準備</span>
+        </div>
+        <div>
+          <strong>目指す状態</strong>
+          <span>1件あたり30分〜1時間の調整を、約10〜15分の確認作業へ</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-    <header>
-      <div class="badge">Cursor版 ─ Googleカレンダー連携</div>
-      <h1>テキスト日程調整アシスタント</h1>
-      <p class="lead">テキストでの複数人日程調整という、いちばん面倒に感じていた部分をAIが引き受けます。候補日の抽出、文面ドラフトの作成、確定後のGoogleカレンダー登録まで対応します。</p>
-      <p class="sub">クライアントへの確定文・リマインドはにこったまさんがテキストで送信。上司・社内への共有はGoogleカレンダーのゲスト招待（自動メール）を利用します。AIが勝手に先方へ送信することはありません。</p>
-    </header>
+  <nav class="toc" aria-label="目次">
+    <div class="container">
+      <a href="#understanding">現状理解</a>
+      <a href="#issue">課題</a>
+      <a href="#plans">プラン比較</a>
+      <a href="#roles">役割分担</a>
+      <a href="#flow">全体フロー</a>
+      <a href="#change">導入後の変化</a>
+      <a href="#safety">安心材料</a>
+      <a href="#next">次の進め方</a>
+    </div>
+  </nav>
 
-    <nav>
-      <strong>目次</strong>
-      <ol>
-        <li><a href="#why">なぜこのスキルがあるのか</a></li>
-        <li><a href="#scope">適用範囲（手動／URL）</a></li>
-        <li><a href="#duration">会議時間の指定</a></li>
-        <li><a href="#roles">AIとにこったまさんの役割</a></li>
-        <li><a href="#complete">1件の完了条件</a></li>
-        <li><a href="#flow">使い方の流れ</a></li>
-        <li><a href="#multi">複数人の日程調整</a></li>
-        <li><a href="#calendar">カレンダー連携</a></li>
-        <li><a href="#chat">チャットでの依頼例</a></li>
-        <li><a href="#samples">文面サンプル</a></li>
-        <li><a href="#effects">期待できる効果</a></li>
-        <li><a href="#notes">注意点</a></li>
-      </ol>
-    </nav>
+  <main>
+    <section id="understanding">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">01 / 現状理解</div>
+          <h2>にこったまさんが大切にしている対応を前提にします</h2>
+          <p class="muted">
+            今回の提案は、クライアントとのやり取りをすべてAIに置き換えるものではありません。
+            これまで大切にされてきた丁寧な確認と送信は残したまま、下準備の負担を減らします。
+          </p>
+        </div>
 
-    <section id="why">
-      <h2>なぜこのスキルがあるのか</h2>
-      <p>関係が深いクライアントとの打ち合わせを、テキスト（メール・チャット）で調整する場面を想定しています。予約ツールのURLは使わず、これまでの送付スタイルを維持したまま、裏方の作業を減らすことが目的です。</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>これまでの負担</th>
-            <th>このスキルでの対応</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>同社の複数人の空きをテキストで照合するのが手間</td>
-            <td>返信内容と上司カレンダーをAIが照合し、候補3日を抽出</td>
-          </tr>
-          <tr>
-            <td>候補日を考えるのに時間がかかる</td>
-            <td>上司のGoogleカレンダーから空きを自動取得し、候補を提案</td>
-          </tr>
-          <tr>
-            <td>確定後のカレンダー登録や上司への共有</td>
-            <td>確定時にGoogleカレンダーへ登録。上司をゲスト追加し、招待メールを送信</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="highlight-box">
-        <strong>半自動化について</strong><br>
-        全部をAIに任せるのではなく、候補日・文面・カレンダー登録はAI、クライアントへの送信と文面の最終確認はにこったまさん、という分担です。速さより、これまでどおりの丁寧なテキストでのやり取りを大切にします。
+        <div class="grid-2">
+          <div class="panel">
+            <h3>今の進め方</h3>
+            <ul>
+              <li>関係性の深い先方には、予約URLではなく手動テキストで丁寧に対応している</li>
+              <li>特に<strong>複数人の日程調整</strong>は、返信の確認や候補のすり合わせが増えて負担になりやすい</li>
+              <li>送信前に自分の目で確認し、必要に応じて一言を添えたい</li>
+              <li>候補確認、返信確認、確定文、リマインド、カレンダー登録が細かく積み重なっている</li>
+              <li>先方とのやり取りの丁寧さは残しつつ、下準備の負担を減らしたい</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>提案の前提</h3>
+            <p>
+              AIが担当するのは「判断」ではなく、にこったまさんが判断しやすくなるための下準備です。
+              先方へ送る前の確認と送信は、これまで通りにこったまさんが行います。
+            </p>
+            <div class="statement">
+              AIが代わりに送るのではなく、にこったまさんが確認しやすい状態を整えます。
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="scope">
-      <h2>適用範囲（手動／URLの切り分け）</h2>
-      <p>このスキルは、<strong>手動テキストで調整する先方</strong>向けです。予約ツールのURLは送りません。新規先方向けのURL送付は、別の進め方のままです。</p>
+    <section id="issue">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">02 / 現在の日程調整フロー</div>
+          <h2>現在にこったまさんが行っている流れを見える化します</h2>
+          <p class="muted">
+            日程調整では、送信そのものだけでなく、その前後にある「探す」「考える」「確認する」「整える」が何度も発生しています。
+            複数人の調整になると、各参加者の返信を照合する必要があるため、さらに負担が大きくなります。
+          </p>
+        </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>相手</th>
-            <th>いつもどおりの進め方</th>
-            <th>本スキル</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>古くからのクライアント<br><span style="font-size:.82rem;color:var(--muted);">（上司指示・関係が深い先方）</span></td>
-            <td>手動でテキスト送付</td>
-            <td><strong>対象</strong> ─ 裏方の照合・文面・カレンダー登録を支援</td>
-          </tr>
-          <tr>
-            <td>新規のお客様</td>
-            <td>予約ツールURLを送る</td>
-            <td>対象外（従来どおり）</td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="issue-map">
+          <div class="issue-column">
+            <div class="issue-item">
+              <strong>1. 上司カレンダーを確認する</strong>
+              <span>会議時間に合う空き時間を探す</span>
+            </div>
+            <div class="issue-item">
+              <strong>2. 候補日時を探す</strong>
+              <span>先方へ出せる候補を選ぶ</span>
+            </div>
+            <div class="issue-item">
+              <strong>3. 先方へ送る文面を作る</strong>
+              <span>候補日時を入れた送付文を整える</span>
+            </div>
+          </div>
 
-      <div class="note">
-        一律にURL化するのではなく、「手動を楽にする」ことが目的です。先方への丁寧な文面は、これまでどおりにこったまさんが確認してから送ります。
+          <div class="arrow-label">複数人だとさらに確認が増える</div>
+
+          <div class="issue-column">
+            <div class="issue-item">
+              <strong>4. 先方からの返信を確認する</strong>
+              <span>複数人の場合は、各返信の空き時間を見比べる</span>
+            </div>
+            <div class="issue-item">
+              <strong>5. 確定できる候補を判断する</strong>
+              <span>全員が合う日時、または再調整が必要かを判断する</span>
+            </div>
+            <div class="issue-item">
+              <strong>6. 確定文・登録・リマインドを整える</strong>
+              <span>確定文、カレンダー登録、前日リマインド文を準備する</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="statement" style="margin-top: 24px;">
+          ひとつひとつは小さな作業でも、複数人の返信確認と候補照合が重なることで、時間と思考の負担が大きくなります。
+        </div>
       </div>
     </section>
 
-    <section id="duration">
-      <h2>会議時間の指定</h2>
-      <p>会議時間は<strong>60分固定ではありません</strong>。チャットの依頼文に分数を入れると、その時間で候補照合・確定文・カレンダー登録を行います。</p>
+    <section id="plans">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">03 / A・B・Cプラン比較</div>
+          <h2>おすすめは、丁寧さを残しながら負担を減らすBプランです</h2>
+          <p class="muted">
+            完全自動化だけが正解ではありません。にこったまさんが大切にしている確認と送信を残すことで、
+            安心して使い始めやすい形にします。
+          </p>
+        </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>依頼例</th>
-            <th>扱い</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>「再来週で<strong>90分</strong>の打ち合わせ」</td><td>90分として処理</td></tr>
-          <tr><td>「<strong>2時間</strong>のミーティング調整」</td><td>120分として処理</td></tr>
-          <tr><td>「<strong>1時間</strong>の打ち合わせ」</td><td>60分として処理</td></tr>
-        </tbody>
-      </table>
+        <div class="plans">
+          <article class="plan">
+            <div class="plan-badge">Aプラン</div>
+            <div class="plan-name">文面作成だけAIが支援</div>
+            <p class="plan-summary">送付文や確定文のたたき台だけをAIが作る、最小導入のプランです。</p>
+            <dl>
+              <dt>にこったまさん</dt>
+              <dd>候補探し、返信確認、送信、カレンダー登録</dd>
+              <dt>AI</dt>
+              <dd>文面ドラフト作成</dd>
+              <dt>向いている場面</dt>
+              <dd>まずAIの文面だけ試したい場合</dd>
+              <dt>懸念</dt>
+              <dd>日程調整全体の負担はあまり減りにくい</dd>
+            </dl>
+          </article>
 
-      <div class="note warm">
-        時間が依頼文から読み取れないときだけ、AIが「何分の打ち合わせですか？」と確認します。候補文・確定文・カレンダー登録は、すべて<strong>同じ会議時間</strong>で揃えます（日付・曜日と同様、推測しません）。
+          <article class="plan recommended">
+            <div class="plan-badge">おすすめ / Bプラン</div>
+            <div class="plan-name">候補作成から文面作成までAIが下準備</div>
+            <p class="plan-summary">複数人の空き照合も含めてAIが候補と文面を用意し、にこったまさんが最終確認して送信するプランです。</p>
+            <dl>
+              <dt>にこったまさん</dt>
+              <dd>送信前確認、必要な一言追加、最終送信</dd>
+              <dt>AI</dt>
+              <dd>複数人の空き照合、候補抽出、返信整理、送付文、確定文、リマインド文、カレンダー登録補助</dd>
+              <dt>向いている場面</dt>
+              <dd>丁寧な対応を残しながら、作業負担を減らしたい場合</dd>
+              <dt>推奨理由</dt>
+              <dd>安心感と効率化のバランスが最もよい</dd>
+            </dl>
+          </article>
+
+          <article class="plan warning">
+            <div class="plan-badge">Cプラン</div>
+            <div class="plan-name">完全自動化を目指す</div>
+            <p class="plan-summary">候補作成から送信まで、できる限りシステム側で完結させるプランです。</p>
+            <dl>
+              <dt>にこったまさん</dt>
+              <dd>例外時の確認、初期設定、運用管理</dd>
+              <dt>AI/システム</dt>
+              <dd>候補作成、文面作成、送信、登録、リマインド</dd>
+              <dt>向いている場面</dt>
+              <dd>定型化された相手・定型化されたやり取りが多い場合</dd>
+              <dt>懸念</dt>
+              <dd>誤送信リスクや心理的ハードルが高く、今回の初期導入には慎重さが必要</dd>
+            </dl>
+          </article>
+        </div>
+
+        <div class="why-b">
+          <div class="panel">
+            <h3>Bプランをおすすめする理由</h3>
+            <p>
+              Bプランは、にこったまさんが大切にしている「送る前に確認する」流れを残せます。
+              一方で、時間がかかりやすい複数人の空き照合・候補探し・文面作成・返信整理はAIが下準備するため、
+              日程調整の負担を大きく減らせます。
+            </p>
+          </div>
+          <div class="panel soft" style="background: var(--green-soft); border-color: #b8dfcf;">
+            <h3>今回の提案の芯</h3>
+            <p><strong>気遣いは人が担い、下準備はAIが支えます。</strong></p>
+            <p class="muted">完全自動化ではなく、安心して使える半自動化から始める提案です。</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <section id="roles">
-      <h2>AIとにこったまさんの役割</h2>
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">04 / 役割分担</div>
+          <h2>にこったまさんが担うこと / AIが支えること</h2>
+          <p class="muted">
+            役割を分けることで、「どこまでAIに任せるのか」「どこは人が確認するのか」が見えやすくなります。
+          </p>
+        </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>作業</th>
-            <th>担当</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>上司カレンダーの空き取得</td><td><span class="tag ai">AI</span></td></tr>
-          <tr><td>複数名の返信と上司空きの照合</td><td><span class="tag ai">AI</span></td></tr>
-          <tr><td>候補3日の抽出</td><td><span class="tag ai">AI</span></td></tr>
-          <tr><td>送付文・確定文・リマインド文のドラフト</td><td><span class="tag ai">AI</span></td></tr>
-          <tr><td>Googleカレンダーへの予定登録（上司・社内をゲスト追加）</td><td><span class="tag ai">AI</span></td></tr>
-          <tr><td>文面の確認・修正</td><td><span class="tag you">にこったまさん</span></td></tr>
-          <tr><td>クライアントへのテキスト送信（候補・確定）</td><td><span class="tag you">にこったまさん</span></td></tr>
-          <tr><td>先方返信のチャットへの貼り付け</td><td><span class="tag you">にこったまさん</span></td></tr>
-          <tr><td>前日リマインドの送信</td><td><span class="tag you">にこったまさん</span></td></tr>
-        </tbody>
-      </table>
+        <div class="roles">
+          <div class="role person">
+            <div class="role-label">人</div>
+            <h3>にこったまさんが担うこと</h3>
+            <div class="role-list">
+              <div>先方へ送る前の最終確認</div>
+              <div>必要に応じた一言の追加</div>
+              <div>送信する・しないの最終判断</div>
+              <div>クライアントとの直接のやり取り</div>
+            </div>
+          </div>
+          <div class="role ai">
+            <div class="role-label">AI</div>
+            <h3>AIが支えること</h3>
+            <div class="role-list">
+              <div>上司カレンダーから候補日時を抽出</div>
+              <div>先方返信を読み取り、確定候補を整理</div>
+              <div>送付文・確定文・リマインド文を作成</div>
+              <div>カレンダー登録に必要な情報を整理</div>
+            </div>
+          </div>
+        </div>
 
-      <div class="note">
-        文面ドラフトはクライアントごとににこったまさんが適宜修正してから送付してください。AIの出力をそのまま送る必要はありません。「先日ありがとうございました」など、関係性に合わせた一文はにこったまさんが足す想定です。
-      </div>
-    </section>
-
-    <section id="complete">
-      <h2>1件の完了条件</h2>
-      <p>1件の日程調整が「終わった」と言える状態を、次のように整理しています。</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>相手</th>
-            <th>やること</th>
-            <th>誰が送るか</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>クライアント（先方）</strong></td>
-            <td>確定文の送信 → 前日リマインドの送信</td>
-            <td><span class="tag you">にこったまさん</span>（AIはドラフトのみ）</td>
-          </tr>
-          <tr>
-            <td><strong>上司・社内</strong></td>
-            <td>Googleカレンダーに予定登録し、ゲストとして追加</td>
-            <td><span class="tag ai">Google</span> が招待メールを自動送信</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <ul class="rules" style="margin-top:16px;">
-        <li>先方：テキストで丁寧にやり取りしたい → 確定文・リマインドは<strong>手動送信</strong></li>
-        <li>上司：カレンダー追加で問題なし（ヒアリングより）→ <strong>ゲスト招待で共有</strong></li>
-        <li>社内参加者：必要に応じてカレンダーゲストに追加 → Googleから自動メール</li>
-      </ul>
-
-      <div class="highlight-box">
-        <strong>完了チェックリスト</strong><br>
-        □ 先方へ確定文を送信　□ Googleカレンダー登録（上司・社内）　□ 前日リマインドを先方へ送信
+        <div class="center-message">
+          最終確認はにこったまさん。AIは、判断しやすい状態を整える下準備を担当します。
+        </div>
       </div>
     </section>
 
     <section id="flow">
-      <h2>使い方の流れ</h2>
-      <p>Cursorのチャットに、普段話すように依頼します。シナリオ番号やルールの説明は不要です。</p>
-
-      <ol class="timeline">
-        <li>
-          <div class="who you">にこったまさん</div>
-          <div>
-            <strong>① チャットで依頼</strong>
-            例：「再来週で<strong>90分</strong>のA社打ち合わせ、候補日の文面を作って」
-          </div>
-        </li>
-        <li>
-          <div class="who ai">AI</div>
-          <div>
-            <strong>② 会議時間を確定 → 空き取得 → 候補3日 → 初回送付文ドラフト</strong>
-            依頼文から会議時間（例：90分）を読み取り、上司カレンダーからその分数で空きを照合します。
-          </div>
-        </li>
-        <li>
-          <div class="who you">にこったまさん</div>
-          <div>
-            <strong>③ 文面を確認してクライアントへ送信</strong>
-            必要に応じて修正し、いつもどおりテキストで送ります。
-          </div>
-        </li>
-        <li>
-          <div class="who you">にこったまさん</div>
-          <div>
-            <strong>④ 返信をチャットに貼る</strong>
-            例：「②でお願いします」または返信全文を貼り付け
-          </div>
-        </li>
-        <li>
-          <div class="who ai">AI</div>
-          <div>
-            <strong>⑤ 確定文 ＋ カレンダー登録 ＋ 前日リマインド文</strong>
-            Zoom URL付きの確定文、Googleカレンダーへの予定登録、前日リマインド文のドラフトを出力します。
-          </div>
-        </li>
-        <li>
-          <div class="who you">にこったまさん</div>
-          <div>
-            <strong>⑥ 確定文を送信</strong>
-            確認後、クライアントへテキストで送ります。
-          </div>
-        </li>
-        <li>
-          <div class="who you">にこったまさん</div>
-          <div>
-            <strong>⑦ 前日にリマインドを送信</strong>
-            前日14時頃、AIが作成したリマインド文を確認し、<strong>クライアントへテキストで手動送信</strong>します（自動送信はしません）。
-          </div>
-        </li>
-      </ol>
-
-      <h3>全部NGで再調整するとき</h3>
-      <p>クライアントから「全部難しいです」と返信があった場合も、返信をチャットに貼るだけで対応できます。AIがカレンダーを再取得し、お詫び＋新しい候補3日（または確定提案）の文面を作成します。</p>
-    </section>
-
-    <section id="multi">
-      <h2>複数人の日程調整</h2>
-      <p>1社の中で2〜3人が同席する打ち合わせにも対応しています。これが最も手間のかかるパターンですが、このスキルの主な想定シーンです。</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>ポイント</th>
-            <th>内容</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>空きの聞き方</td>
-            <td>各参加者に<strong>個別</strong>で空きを確認（メールは1名ずつ送る）</td>
-          </tr>
-          <tr>
-            <td>AIへの渡し方</td>
-            <td>それぞれの返信をチャットに貼る → AIが全員＋上司の予定を照合</td>
-          </tr>
-          <tr>
-            <td>文面の出し方</td>
-            <td>候補3日の送付文を<strong>宛先1名分</strong>ずつ作成（他メンバー名は列挙しない）</td>
-          </tr>
-          <tr>
-            <td>表現</td>
-            <td>「1人目」「2人目」は使わず、氏名で整理</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="note warm">
-        照合作業はAIが裏方で行います。送付文には候補日時だけを端的に書き、社内調整を依頼するような文面にはしません。
-      </div>
-    </section>
-
-    <section id="calendar">
-      <h2>カレンダー連携</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>項目</th>
-            <th>内容</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>空き確認</td>
-            <td>上司の共有Googleカレンダー（読み取り専用）から取得</td>
-          </tr>
-          <tr>
-            <td>予定登録</td>
-            <td>確定時に、にこったまさんのGoogleカレンダーへ「A社会議」等の予定を登録</td>
-          </tr>
-          <tr>
-            <td>上司・社内への共有</td>
-            <td>予定登録時に<strong>上司（必要なら社内参加者）をゲストとして追加</strong>。Googleから招待メールが自動送信されます</td>
-          </tr>
-          <tr>
-            <td>先方</td>
-            <td>カレンダーのゲストには<strong>追加しません</strong>（テキスト送付と役割が重複するため）</td>
-          </tr>
-          <tr>
-            <td>カレンダーリマインド</td>
-            <td>前日14:00（popup ＋ email）が設定されます</td>
-          </tr>
-          <tr>
-            <td>先方への前日リマインド</td>
-            <td>AIがテキスト文面のドラフトを作成 → <strong>送信はにこったまさん</strong></td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="note">
-        上司・社内への招待メールはGoogle標準の形式（英語混在のことがあります）で届きます。クライアントへの丁寧な日本語文面（確定文・リマインド）は、別途にこったまさんがテキストで送ります。
-      </div>
-    </section>
-
-    <section id="chat">
-      <h2>チャットでの依頼例</h2>
-
-      <div class="prompt-grid">
-        <div class="prompt-card">
-          <strong>初回：候補日を出したいとき</strong>
-          <code>再来週90分でA社の打ち合わせ、候補日の文面を作って</code>
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">05 / 全体フロー</div>
+          <h2>にこったまさん・AI・上司カレンダー・クライアントの流れ</h2>
+          <p class="muted">
+            Bプランでは、AIが裏側で候補と文面を整え、にこったまさんが確認して先方へ送ります。
+            クライアントとの接点は、これまで通りにこったまさんが持ちます。
+          </p>
         </div>
-        <div class="prompt-card">
-          <strong>2時間の会議を調整するとき</strong>
-          <code>来週、2時間のミーティング調整お願いします</code>
-        </div>
-        <div class="prompt-card">
-          <strong>クライアントから返信が来たとき</strong>
-          <code>②で大丈夫です</code> または返信全文を貼り付け
-        </div>
-        <div class="prompt-card">
-          <strong>全部NGで再調整するとき</strong>
-          <code>全部難しいです。来週の火曜か水曜なら空いています</code>（返信をそのまま貼る）
-        </div>
-        <div class="prompt-card">
-          <strong>同社の複数名の空きがあるとき</strong>
-          <code>田中様：来週水曜午前OK / 佐藤様：来週木曜14時以降OK</code>（各返信を貼る）
+
+        <div class="flow" aria-label="日程調整の全体フロー">
+          <div class="lane-grid">
+            <div class="lane">
+              <h3>にこったまさん</h3>
+              <div class="lane-body">
+                <div class="flow-step"><strong>1. 基本情報を入力</strong>会社名・宛先名・会議時間を入力</div>
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>4. 文面を確認</strong>必要な一言を添えて送信</div>
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>8. 確定文を確認</strong>内容を確認して先方へ送信</div>
+              </div>
+            </div>
+
+            <div class="lane">
+              <h3>AI</h3>
+              <div class="lane-body">
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>2. 候補を作成</strong>上司の空きから候補日時を整理</div>
+                <div class="flow-step"><strong>3. 送付文を作成</strong>一括コピーできるドラフトを表示</div>
+                <div class="flow-step"><strong>7. 返信を読み取り</strong>候補番号や開始時刻を整理</div>
+                <div class="flow-step"><strong>9. 登録補助</strong>カレンダー登録・リマインド文を用意</div>
+              </div>
+            </div>
+
+            <div class="lane">
+              <h3>上司カレンダー</h3>
+              <div class="lane-body">
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>空き時間を参照</strong>候補作成に必要な空きを取得</div>
+                <div class="flow-step blank"></div>
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>予定を登録</strong>確定日時を反映</div>
+              </div>
+            </div>
+
+            <div class="lane">
+              <h3>クライアント</h3>
+              <div class="lane-body">
+                <div class="flow-step blank"></div>
+                <div class="flow-step blank"></div>
+                <div class="flow-step"><strong>5. 候補を受け取る</strong>にこったまさんからの文面を確認</div>
+                <div class="flow-step"><strong>6. 返信する</strong>希望候補や開始時刻を返信</div>
+                <div class="flow-step"><strong>10. 確定文を受け取る</strong>確定日時と参加URLを確認</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="samples">
-      <h2>文面サンプル</h2>
-      <p>AIが出力するドラフトのイメージです。送信前に内容を確認し、クライアントに合わせて修正してください。</p>
-
-      <h3>初回：候補3日の送付</h3>
-      <p>候補は空いている時間帯（幅）で提示します。依頼で指定した時間（例：90分）を「この間で90分」と添えます。</p>
-      <div class="sample-label">送付文ドラフト例（90分の場合）</div>
-      <div class="sample">A社 田中様
-
-お世話になっております。
-
-打ち合わせの日程につきまして、下記のいずれかでご都合はいかがでしょうか。
-（所要時間：90分）
-
-1. 6月15日（月）12:45〜17:45（この間で90分）
-2. 6月16日（火）14:45〜17:45（この間で90分）
-3. 6月18日（木）11:45〜17:45（この間で90分）
-
-ご都合のよい日時をお知らせいただけますと幸いです。
-何卒よろしくお願いいたします。</div>
-
-      <h3>確定：OK返信後（Zoom URL付き・90分の例）</h3>
-      <div class="sample-label">確定文ドラフト例</div>
-      <div class="sample">A社 田中様
-
-お世話になっております。
-ご返信ありがとうございます。
-
-下記の日時で打ち合わせを確定させていただきます。
-
-・日時：6月16日（火）15:00〜16:30
-・形式：オンライン（Zoom）
-・URL：https://zoom.us/j/9480344829
-
-お時間になりましたら、上記URLよりご参加ください。
-何卒よろしくお願いいたします。</div>
-
-      <h3>前日リマインド（前日14時頃に送信）</h3>
-      <p>AIがドラフトを作成します。<strong>送信はにこったまさんがクライアントへテキストで手動</strong>行います（自動送信はしません）。</p>
-      <div class="sample-label">リマインド文ドラフト例（90分・15:00〜16:30）</div>
-      <div class="sample">A社 田中様
-
-お世話になっております。
-
-明日の打ち合わせについて、リマインドのご連絡です。
-
-・日時：6月16日（火）15:00〜16:30
-・形式：オンライン（Zoom）
-・URL：https://zoom.us/j/9480344829
-
-お時間になりましたら、上記URLよりご参加ください。
-何卒よろしくお願いいたします。</div>
-    </section>
-
-    <section id="effects">
-      <h2>期待できる効果</h2>
-
-      <div class="compare">
-        <div class="compare-box before">
-          <strong>従来（目安）</strong>
-          複数人の空き照合：30〜60分<br>
-          候補3日を出す：30〜60分<br>
-          確定後のカレンダー登録：5〜10分
+    <section id="change">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">06 / 導入後の変化</div>
+          <h2>時間だけでなく、日程調整に悩む時間も減らします</h2>
+          <p class="muted">
+            細かい作業ごとの計算ではなく、実感として伝わりやすい目安で整理します。
+            実際の所要時間は案件により変わりますが、AIが下準備することで確認中心の作業に変わります。
+          </p>
         </div>
-        <div class="compare-box after">
-          <strong>本仕組み（目安）</strong>
-          空き照合・候補抽出：10〜15分<br>
-          確定文＋Zoom：3〜5分<br>
-          カレンダー登録：自動
+
+        <div class="time-change">
+          <div class="time-card">
+            <h3>これまで</h3>
+            <div class="time-number">30分〜1時間</div>
+            <p class="muted">候補を探す、複数人の返信を見比べる、文面を考える、確定文やリマインド文を整える。</p>
+          </div>
+          <div class="time-arrow">から</div>
+          <div class="time-card after">
+            <h3>導入後の目安</h3>
+            <div class="time-number">10〜15分</div>
+            <p class="muted">AIが候補と文面を下準備し、にこったまさんは確認と送信に集中。</p>
+          </div>
+        </div>
+
+        <div class="mind-grid">
+          <div class="mind">
+            <strong>悩む時間を減らす</strong>
+            <p class="muted">複数人の空きが重なる日時を探したり、どの候補で確定するか迷ったりする時間を減らします。</p>
+          </div>
+          <div class="mind">
+            <strong>ゼロから考えない</strong>
+            <p class="muted">送付文・確定文・リマインド文はドラフトから確認できるため、文面作成の負担が軽くなります。</p>
+          </div>
+          <div class="mind">
+            <strong>本来の業務へ戻りやすく</strong>
+            <p class="muted">日程調整に使っていた頭の余白を、より大切な判断やクライアント対応に戻せます。</p>
+          </div>
         </div>
       </div>
-
-      <ul class="rules" style="margin-top:20px;">
-        <li>複数人のテキスト日程調整にかかる時間を大幅に短縮できる</li>
-        <li>確定後のGoogleカレンダー登録と上司への共有が自動化される</li>
-        <li>クライアントへの送信はにこったまさん自身のまま。関係性を保てる</li>
-        <li>文面はドラフトとして受け取り、最終確認・修正は自分で行える</li>
-      </ul>
     </section>
 
-    <section id="notes">
-      <h2>注意点</h2>
-      <ul class="rules">
-        <li class="important">文面はAIのドラフトです。<strong>送信前に必ず内容を確認</strong>してください</li>
-        <li>会議時間は依頼文で指定します（60分固定ではありません）。例：90分、2時間</li>
-        <li>日付と曜日はスクリプトで自動計算されます。出力と異なる曜日を手書きしないでください</li>
-        <li>候補は空き時間帯（幅）で提示し、確定時だけ指定した会議時間で開始〜終了を具体化します</li>
-        <li>調整期間の指定がなければ、デフォルトで「来週〜再来週」を対象にします</li>
-        <li>先方への前日リマインドは自動送信されません。前日14時頃に、にこったまさんがテキストで手動送信してください</li>
-        <li>上司・社内への共有はGoogleカレンダーのゲスト招待（自動メール）を利用します</li>
-      </ul>
+    <section id="safety">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">07 / 安心材料</div>
+          <h2>勝手に送らない、いきなり本番にしない</h2>
+          <p class="muted">
+            AIを使う不安を減らすため、最初から完全自動化にはしません。
+            送信前確認を残し、まずは送らない練習から始められる形にします。
+          </p>
+        </div>
 
-      <div class="note warm">
-        <strong>困ったとき：</strong>カレンダー連携でエラーが出た場合は、担当者（ふみ）にお知らせください。
+        <div class="safe-list">
+          <div>
+            <strong>AIが勝手に送信しない</strong>
+            <span class="muted">文面はドラフトとして表示。送るかどうかはにこったまさんが判断します。</span>
+          </div>
+          <div>
+            <strong>送信前に確認できる</strong>
+            <span class="muted">一括コピー前に文面を確認し、必要に応じて調整できます。</span>
+          </div>
+          <div>
+            <strong>まずは架空案件で試せる</strong>
+            <span class="muted">大切な案件でいきなり使わず、送らない練習から始められます。</span>
+          </div>
+          <div>
+            <strong>完全自動化は将来の選択肢</strong>
+            <span class="muted">最初はBプランで安心して始め、必要に応じて範囲を広げます。</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <footer>
-      テキスト日程調整アシスタント ─ にこったまさん向けご説明資料（Cursor版）
-    </footer>
+    <section id="next">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">08 / 次の進め方</div>
+          <h2>送らない練習から始めて、違和感がなければ本番へ</h2>
+          <p class="muted">
+            まずはデモ画面で、架空の例や過去の返信を使って文面の出方を確認します。
+            文面や流れに違和感があれば、運用に合わせて調整します。
+          </p>
+        </div>
 
-  </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">Step 1</div>
+            <h3>デモで確認</h3>
+            <p class="muted">架空の内容で候補作成と送信用ドラフトを確認。クライアントへは送りません。</p>
+          </div>
+          <div class="step">
+            <div class="step-num">Step 2</div>
+            <h3>文面を調整</h3>
+            <p class="muted">出てきた文面や項目に違和感があれば、テンプレートや表示を調整します。</p>
+          </div>
+          <div class="step">
+            <div class="step-num">Step 3</div>
+            <h3>限定的に本番利用</h3>
+            <p class="muted">急ぎでない案件などから、確認しながら少しずつ使う範囲を広げます。</p>
+          </div>
+        </div>
+
+        <p style="margin-top: 24px;">
+          <a class="demo-link" href="https://script.google.com/macros/s/AKfycbwXJWvlDla4xVZRmgSymOMNeYFxeMaQNuvKVEDKphZWc8KGoEi_0xb4W7Mr1rgUKdfJ/exec" target="_blank" rel="noopener">
+            デモ画面を開く
+          </a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>日程調整の下準備をAIが支えるご提案</p>
+  </footer>
 </body>
 </html>
